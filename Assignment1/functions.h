@@ -1,6 +1,11 @@
 #include <iostream>
 #include <vector>
+#include <chrono>
+#include <cmath>
+#include <random>
+
 using namespace std;
+using namespace std::chrono;
 
 struct Record {
     int key;
