@@ -1,40 +1,34 @@
 #include "functions.h"
 #include <omp.h>
 
+void show(const vector<int> &arr){
+    cout<<"[ Array of size "<<arr.size()<<" ] ";
+}
 int main() {
-    vector<Record> arr = {
-        {689199, {544687}},
-        {154777, {522225}},
-        {317163, {178550}},
-        {162933, {976547}},
-        {991956, {590311}},
-        {655508, {184317}},
-        {538394, {354815}},
-        {334007, {454298}},
-        {554981, {518771}},
-        {129588, {222662}} 
-    };
+    //create a random large vector of records using loops
+    vector<Record> arr;
+    for (int i = 0; i < 10000000; i++) {
+        Record record;
+        record.key = i;
+        // Generate random integer data
+        for (int j = 0; j < 10; j++) {
+            record.int_data.push_back(rand() % 100);
+        }
+        arr.push_back(record);
+    }
     vector<Record> arr1=arr;
     cout<<"Parallel Merge Sort"<<endl;
     auto start = high_resolution_clock::now();
     parallel_merge_sort(arr);
     auto stop = high_resolution_clock::now();
-    auto duration = duration_cast<milliseconds>(stop - start);
-
-    for (const auto& record : arr) {
-        cout << record.key << " " << record.int_data[0] << endl;
-    }
-    cout << "Time taken: " << duration.count() << " milliseconds" << endl << endl;
+    auto duration = duration_cast<microseconds>(stop - start);
+    cout << "Time taken: " << duration.count() << " microseconds" << endl << endl;
 
     cout<<"Sequential Merge Sort"<<endl;
     start = high_resolution_clock::now();
     merge_sort(arr1);
     stop = high_resolution_clock::now();
-    duration = duration_cast<milliseconds>(stop - start);
-    
-    for (const auto& record : arr1) {
-        cout << record.key << " " << record.int_data[0] << endl;
-    }
-    cout << "Time taken: " << duration.count() << " milliseconds" << endl << endl;
+    duration = duration_cast<microseconds>(stop - start);
+    cout << "Time taken: " << duration.count() << " microseconds" << endl << endl;
     return 0;
 }
