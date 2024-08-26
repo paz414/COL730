@@ -22,6 +22,7 @@ int binary_search(const vector<Record>& arr, int left, int right, int key) {
 vector<Record> parallel_binary_search(vector<Record>& arr, int key) {
     vector<Record> results;
     int n = arr.size();
+    omp_set_num_threads(4);
     int num_threads = omp_get_max_threads();
     int chunk_size = n / num_threads;
     
@@ -31,12 +32,14 @@ vector<Record> parallel_binary_search(vector<Record>& arr, int key) {
         int start = thread_id * chunk_size;
         int end = (thread_id == num_threads - 1) ? n - 1 : start + chunk_size - 1;
         
-        int result = binary_search(arr, start, end, key);
-        
-        if (result != -1) {
-            #pragma omp critical  //to avoid race condition
-            {
-                results.push_back(arr[result]);
+        if (arr[start].key <= key && arr[end].key >= key) {
+            int result = binary_search(arr, start, end, key);
+            
+            if (result != -1) {
+                #pragma omp critical
+                {
+                    results.push_back(arr[result]);
+                }
             }
         }
     }
